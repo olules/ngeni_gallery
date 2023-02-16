@@ -1,3 +1,4 @@
+//AddImageForm.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,70 +20,91 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     display: "none",
+    // marginBottom: 50,
   },
   button: {
-    margin: theme.spacing(2, 0),
+    //margin: 50,
   },
 }));
 
 const AddImageForm = () => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [desc, setDesc] = useState("");
+  const [img, setImg] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
 
   const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+    setImg(event.target.files[0]);
   };
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
+  const handleDescChange = (event) => {
+    setDesc(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+const handleSubmit = (event) => {
+  event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("title", title);
-    formData.append("description", description);
+  const formData = new FormData();
+  formData.append("img", img);
+  formData.append("title", title);
+  formData.append("desc", desc);
 
-    dispatch(addImage(formData));
+  fetch("http://localhost:5000/api/images", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        setTitle("");
+        setDesc("");
+        setImg(null);
+        navigate("/", { replace: true });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
 
-    setTitle("");
-    setDescription("");
-    setImage(null);
-
-    navigate("/", { replace: true });
-  };
 
   return (
-    <Container>
-      <Box mt={3}>
-        <Typography variant="h4">Add Image</Typography>
+    <Container style={{ margin: 50, marginTop: 100 }}>
+      <Box style={{ margin: 20 }} mt={10}>
+        <Typography
+          style={{ textAlign: "center", fontSize: 32, fontWeight: 2 }}
+          variant="h4"
+        >
+          Add Image
+        </Typography>
       </Box>
-      <form onSubmit={handleSubmit} className={classes.formContainer}>
+      <form
+        onSubmit={handleSubmit}
+        className={classes.formContainer}
+        enctype="multipart/form-data"
+      >
         <Box mt={2} width="100%">
           <TextField
             fullWidth
             label="Title"
             value={title}
             onChange={handleTitleChange}
+            style={{ borderColor: "#ccc" }}
           />
         </Box>
         <Box mt={2} width="100%">
           <TextField
             fullWidth
             label="Description"
-            value={description}
-            onChange={handleDescriptionChange}
+            value={desc}
+            onChange={handleDescChange}
+            style={{ marginBottom: 40 }}
           />
         </Box>
         <Box mt={2} width="100%">
@@ -92,9 +114,15 @@ const AddImageForm = () => {
             onChange={handleImageChange}
             id="contained-button-file"
             className={classes.input}
+            // value={img}
           />
           <label htmlFor="contained-button-file">
-            <Button variant="contained" color="primary" component="span">
+            <Button
+              style={{ marginBottom: 20 }}
+              variant="contained"
+              color="primary"
+              component="span"
+            >
               Upload
             </Button>
           </label>
@@ -104,7 +132,7 @@ const AddImageForm = () => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!title || !description || !image}
+            disabled={!title || !desc || !img}
             className={classes.button}
           >
             Submit

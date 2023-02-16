@@ -1,16 +1,15 @@
 import express, { json } from "express";
-import serveStatic from "serve-static";
 import pkg from "mongoose";
-import { extname, dirname, join } from "path";
+import { extname } from "path";
 import cors from "cors";
 import multer, { diskStorage } from "multer";
 import imagesRouter from "./routes/images.js";
-import { fileURLToPath } from "url";
-
+import passport from "passport";
+import session from "express-session";
+import path from 'path';
 
 const app = express();
 const { connect, connection } = pkg;
-
 
 // Middleware
 app.use(cors());
@@ -19,7 +18,7 @@ app.use(json());
 // Connect to MongoDB
 connect("mongodb://localhost:27017/gallery", {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  // useUnifiedTopology: true,
 });
 
 const db = connection;
@@ -28,12 +27,17 @@ db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
+app.use(session({ secret: "secret", resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Multer storage configuration
 const storage = diskStorage({
-  destination: "./public/images",
+  destination: "./uploads",
   filename: (req, file, cb) => {
     cb(null, `${file.fieldname}-${Date.now()}${extname(file.originalname)}`);
   },
+  encoding: "base64",
 });
 
 // Multer upload middleware
@@ -43,7 +47,7 @@ const upload = multer({ storage });
 app.use("/api/images", imagesRouter);
 
 // Image upload route
-app.post("/api/upload", upload.single("image"), (req, res) => {
+app.post("/api/upload", upload.single("img"), (req, res) => {
   res.json({
     success: true,
     file: req.file,
@@ -51,8 +55,8 @@ app.post("/api/upload", upload.single("image"), (req, res) => {
 });
 
 // Serve static files
-const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(serveStatic(join(__dirname, "client", "build")));
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // Start the server
 const port = process.env.PORT || 5000;

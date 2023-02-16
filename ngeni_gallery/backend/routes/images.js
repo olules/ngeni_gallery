@@ -1,19 +1,34 @@
 import express from "express";
 import path from "path";
 import multer from "multer";
-import Image  from "../models/images.js";
+import Image from "../models/images.js";
 
 const imagesRouter = express.Router();
-const upload = multer({ dest: "uploads/" });
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "uploads"));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Upload image
-imagesRouter.post("/", upload.single("image"), async (req, res) => {
+imagesRouter.post("/", upload.single("img"), async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, desc } = req.body;
 
     const newImage = new Image({
       title,
-      description,
+      desc,
       imageUrl: `uploads/${req.file.filename}`,
     });
 
@@ -25,6 +40,8 @@ imagesRouter.post("/", upload.single("image"), async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+imagesRouter.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Get all images
 imagesRouter.get("/", async (req, res) => {
@@ -55,24 +72,22 @@ imagesRouter.get("/:id", async (req, res) => {
 });
 
 // Update image
-imagesRouter.put("/:id", upload.single("image"), async (req, res) => {
+imagesRouter.put("/:id", upload.single("img"), async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, desc } = req.body;
 
     let updatedFields = {
       title,
-      description,
+      desc,
     };
 
     if (req.file) {
       updatedFields.imageUrl = `uploads/${req.file.filename}`;
     }
 
-    const image = await Image.findByIdAndUpdate(
-      req.params.id,
-      updatedFields,
-      { new: true }
-    );
+    const image = await Image.findByIdAndUpdate(req.params.id, updatedFields, {
+      new: true,
+    });
 
     if (!image) {
       return res.status(404).json({ message: "Image not found" });
@@ -101,6 +116,4 @@ imagesRouter.delete("/:id", async (req, res) => {
   }
 });
 
-
-
-export default imagesRouter
+export default imagesRouter;

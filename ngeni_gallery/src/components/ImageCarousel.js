@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Gallery, GalleryImage } from "react-gesture-gallery";
 
@@ -9,13 +9,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ImageCarousel = ({ images }) => {
+const ImageCarousel = () => {
   const classes = useStyles();
-  const [index, setIndex] = React.useState(0);
+  const [images, setImages] = useState([]);
+  const [index, setIndex] = useState(0);
 
-  const handleIndexChange = React.useCallback((index) => {
-    setIndex(index);
+  useEffect(() => {
+    const fetchImages = async () => {
+      const res = await fetch("http://localhost:5000/api/images");
+      const data = await res.json();
+      setImages(data);
+    };
+
+    fetchImages();
   }, []);
+
+  const handleIndexChange = (index) => {
+    setIndex(index);
+  };
 
   return (
     <div className={classes.root}>
@@ -29,8 +40,9 @@ const ImageCarousel = ({ images }) => {
           <GalleryImage
             key={image._id}
             objectFit="contain"
-            src={`/api/images/${image.imageUrl}`}
+            src={`data:${image.contentType};base64,${image.imageData}`}
             alt={image.title}
+            style={{ margin: 200 }}
           />
         ))}
       </Gallery>
