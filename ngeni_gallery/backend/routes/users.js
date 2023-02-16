@@ -4,14 +4,17 @@ const router = Router();
 import passport from "passport";
 //Import User model
 import User, { register } from "../models/User";
+import cors from "cors";
 
-//new user signup page display
-router.get("/", (req, res) => {
-  res.render("clerksReg", { title: "New Clerk Registration" });
-});
+const corsOptions = {
+  origin: "http://localhost:3000", // specify the URL of your frontend application
+  optionsSuccessStatus: 200,
+};
+
+
 
 //New user signup
-router.post("/", async (req, res) => {
+router.post("/", cors(corsOptions), async (req, res) => {
   try {
     const newUser = new User(req.body);
     await register(newUser, req.body.passCode, (err) => {
@@ -30,16 +33,15 @@ router.post("/", async (req, res) => {
 
 
 // Sign out route
-router.get('/logout',(req,res)=>{
-  if(req.session){
-      req.session.destroy((err)=>{
-          if(err){
-              console.log('Sign out error');
-          }
-          else{
-              return res.redirect('/');
-          }
-      });
+router.get("/logout", cors(corsOptions), async (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log("Sign out error");
+      } else {
+        return res.redirect("/");
+      }
+    });
   }
 });
 

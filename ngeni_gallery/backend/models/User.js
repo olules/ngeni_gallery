@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const passportmongoose = require("passport-local-mongoose");
+import { Schema, model } from "mongoose";
+import passportmongoose from "passport-local-mongoose";
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
@@ -25,4 +25,4 @@ UserSchema.plugin(passportmongoose, {
 });
 
 //Associating the schema with actual collection name
-module.exports = mongoose.model("Users", UserSchema);
+export default model("Users", UserSchema);
