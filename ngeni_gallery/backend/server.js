@@ -1,103 +1,62 @@
-//dependencies
-import express, { urlencoded, static } from "express";
-import { connect, connection } from "mongoose";
-import { initialize, session, use, serializeUser, deserializeUser } from "passport";
-
-import moment from "moment";
-
-// Configure environment variable
-require("dotenv").config();
-// Express-Session middleware, save session cookie
-const expressSession = require("express-session")({
-  secret: "secret",
-  resave: false,
-  saveUninitialized: false,
-});
-
-// Import user model
-import { createStrategy, serializeUser as _serializeUser, deserializeUser as _deserializeUser } from "./models/User";
+import express, { json } from "express";
+import serveStatic from "serve-static";
+import pkg from "mongoose";
+import { extname, join } from "path";
+import cors from "cors";
+import multer, { diskStorage } from "multer";
+import imagesRouter from "./routes/images";
 
 
-import signUpRoute from "./routes/userRoutes";
-import loginRoute from "./routes/loginRoute";
-
-// Instantiations
 const app = express();
+const { connect, connection } = pkg;
 
-//Database configuration
-connect(process.env.MONGO_URI, {
+
+// Middleware
+app.use(cors());
+app.use(json());
+
+// Connect to MongoDB
+connect("mongodb://localhost:27017/gallery", {
   useNewUrlParser: true,
-  // useUnifiedTopology:true,
-  // useCreateIndex:true,
-  // useFindAndModify:false
+  useUnifiedTopology: true,
 });
 
-connection
-  .on("open", () => {
-    console.log("Mongoose connection open");
-  })
-  .on("error", (err) => {
-    console.log(`connection error:${err.message}`);
+const db = connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Connected to MongoDB");
+});
+
+// Multer storage configuration
+const storage = diskStorage({
+  destination: "./public/images",
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}-${Date.now()}${extname(file.originalname)}`);
+  },
+});
+
+// Multer upload middleware
+const upload = multer({ storage });
+
+// Routes
+app.use("/api/images", imagesRouter);
+
+// Image upload route
+app.post("/api/upload", upload.single("image"), (req, res) => {
+  res.json({
+    success: true,
+    file: req.file,
   });
-
-// Configuration for templating Engine
-app.set("view engine", "pug");
-app.set("views", "./views");
-app.locals.moment = moment;
-
-// Middle ware
-app.use(urlencoded({ extended: true }));
-// app.use(express.json());
-
-// Initializing  passport module and connecting it to our session
-app.use(expressSession);
-app.use(initialize());
-app.use(session());
-
-// Passport configurations (creating user's strategy)
-use(createStrategy());
-serializeUser(_serializeUser());
-deserializeUser(_deserializeUser());
-
-// middleware for serving static files
-app.use(static("public"));
-app.use("/public/img", static(__dirname + "/public/img"));
-
-//routes middleware
-app.use("/", loginRoute);
-app.use("/signup", signUpRoute);
-
-//Request time logger
-app.use((req,res,next)=>{
-  console.log('New request received at' + Date.now());
-  next();
 });
 
-//Index page route
-app.get('/',(req,res)=>{
-  res.render('index')
+// Serve static files
+app.use(serveStatic(join(__dirname, "client", "build")));
+app.get("*", (req, res) => {
+  res.sendFile(join(__dirname, "client", "build", "index.html"));
 });
 
-// Sign out route
-app.get('/logout',(req,res)=>{
-  if(req.session){
-      req.session.destroy((err)=>{
-          if(err){
-              console.log('Sign out error');
-          }
-          else{
-              return res.redirect('/');
-          }
-      });
-  }
+// Start the server
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
-
-
-//Undefined route
-app.get('*',(req,res)=>{
-  res.status(404).send('Page not found')
-});
-
-//Server configuration
-port = process.env.PORT || 3000;
-app.listen(port, ()=> console.log(`listening on port ${port}`));
