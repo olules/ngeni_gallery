@@ -1,10 +1,11 @@
 import express, { json } from "express";
 import serveStatic from "serve-static";
 import pkg from "mongoose";
-import { extname, join } from "path";
+import { extname, dirname, join } from "path";
 import cors from "cors";
 import multer, { diskStorage } from "multer";
 import imagesRouter from "./routes/images.js";
+import { fileURLToPath } from "url";
 
 
 const app = express();
@@ -50,10 +51,8 @@ app.post("/api/upload", upload.single("image"), (req, res) => {
 });
 
 // Serve static files
+const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(serveStatic(join(__dirname, "client", "build")));
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, "client", "build", "index.html"));
-});
 
 // Start the server
 const port = process.env.PORT || 5000;
