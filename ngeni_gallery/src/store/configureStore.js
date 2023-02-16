@@ -2,8 +2,8 @@ import { combineReducers, applyMiddleware } from "redux";
 import { legacy_createStore as createStore } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import imageReducer from "./reducers/imageReducer";
-import loginReducer from "./reducers/loginReducer";
+import imageReducer from "./reducers/images.js";
+import loginReducer from "./reducers/login.js";
 
 const reducer = combineReducers({
   images: imageReducer,

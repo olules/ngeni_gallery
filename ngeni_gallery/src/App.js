@@ -6,27 +6,30 @@ import AddImageForm from "./components/AddImageForm.js";
 import Login from "./components/Login.js";
 import PrivateRoute from "./components/PrivateRoute.js";
 import { useSelector } from "react-redux";
-
+import store from "./store/configureStore.js";
+import { Provider } from "react-redux";
 function App() {
   const isAuthenticated = useSelector((state) => state.login.isAuthenticated);
 
   return (
-    <Router>
-      <Navigation />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <PrivateRoute
-          path="/"
-          element={<ImageCarousel />}
-          isAuthenticated={isAuthenticated}
-        />
-        <PrivateRoute
-          path="/add-image"
-          element={<AddImageForm />}
-          isAuthenticated={isAuthenticated}
-        />
-      </Routes>
-    </Router>
+    <Provider store={store} >
+      <Router>
+        <Navigation />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <PrivateRoute
+            path="/"
+            element={<ImageCarousel />}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path="/add-image"
+            element={<AddImageForm />}
+            isAuthenticated={isAuthenticated}
+          />
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 
