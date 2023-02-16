@@ -2,7 +2,7 @@ import express, { json } from "express";
 import pkg from "mongoose";
 import { extname } from "path";
 import cors from "cors";
-import multer, { diskStorage } from "multer";
+
 import imagesRouter from "./routes/images.js";
 import passport from "passport";
 import session from "express-session";
@@ -31,28 +31,12 @@ app.use(session({ secret: "secret", resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Multer storage configuration
-const storage = diskStorage({
-  destination: "./uploads",
-  filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}-${Date.now()}${extname(file.originalname)}`);
-  },
-  encoding: "base64",
-});
 
-// Multer upload middleware
-const upload = multer({ storage });
 
 // Routes
 app.use("/api/images", imagesRouter);
 
-// Image upload route
-app.post("/api/upload", upload.single("img"), (req, res) => {
-  res.json({
-    success: true,
-    file: req.file,
-  });
-});
+
 
 // Serve static files
 const __dirname = path.dirname(new URL(import.meta.url).pathname);

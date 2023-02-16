@@ -87,7 +87,7 @@ const handleSubmit = (event) => {
       <form
         onSubmit={handleSubmit}
         className={classes.formContainer}
-        enctype="multipart/form-data"
+        encType="multipart/form-data"
       >
         <Box mt={2} width="100%">
           <TextField
@@ -114,7 +114,7 @@ const handleSubmit = (event) => {
             onChange={handleImageChange}
             id="contained-button-file"
             className={classes.input}
-            // value={img}
+            //value={img}
           />
           <label htmlFor="contained-button-file">
             <Button

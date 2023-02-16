@@ -1,25 +1,22 @@
 import express from "express";
 import path from "path";
-import multer from "multer";
+import multer, { diskStorage } from "multer";
 import Image from "../models/images.js";
 
 const imagesRouter = express.Router();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "uploads"));
+// Multer storage configuration
+const storage = diskStorage({
+  destination: "./uploads",
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}-${Date.now()}${extname(file.originalname)}`);
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    );
-  },
+  encoding: "base64",
 });
 
-const upload = multer({ storage: storage });
+// Multer upload middleware
+const upload = multer({ storage });
 
 // Upload image
 imagesRouter.post("/", upload.single("img"), async (req, res) => {
