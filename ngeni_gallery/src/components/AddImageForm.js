@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -16,7 +16,7 @@ const AddImageForm = () => {
   const [image, setImage] = useState(null);
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
@@ -44,7 +44,7 @@ const AddImageForm = () => {
     setDescription("");
     setImage(null);
 
-    history.push("/");
+    navigate("/", { replace: true });
   };
 
   return (

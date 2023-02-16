@@ -1,11 +1,31 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation.js";
+import ImageCarousel from "./components/ImageCarousel.js";
+import UploadForm from "./components/AddImageForm.js";
 
 function App() {
-  return <div className="App">
-    <h1>Ngeni Gallery</h1>
-    
-  </div>;
+  const [images, setImages] = useState([]);
+
+  const addImage = (newImage) => {
+    setImages([...images, newImage]);
+  };
+
+  return (
+    <Router>
+      <div className="App">
+        <Navigation />
+        <Routes>
+          <Route exact path="/">
+            <ImageCarousel images={images} />
+          </Route>
+          <Route path="/upload">
+            <UploadForm onAddImage={addImage} />
+          </Route>
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
