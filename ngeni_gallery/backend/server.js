@@ -4,7 +4,7 @@ import pkg from "mongoose";
 import { extname, join } from "path";
 import cors from "cors";
 import multer, { diskStorage } from "multer";
-import imagesRouter from "./routes/images";
+import imagesRouter from "./routes/images.js";
 
 
 const app = express();
