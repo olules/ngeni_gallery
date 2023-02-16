@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginUser, signupUser } from "../store/actions/login.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,30 +9,16 @@ const Login = () => {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
-  const handleLogin = async (e) => {
+  const dispatch = useDispatch();
+
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/login", {
-        email,
-        password,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(loginUser(email, password));
   };
 
-  const handleSignup = async (e) => {
+  const handleSignup = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/signup", {
-        email: signupEmail,
-        password: signupPassword,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(signupUser(signupEmail, signupPassword));
   };
 
   return (
