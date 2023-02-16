@@ -17,7 +17,20 @@ function App() {
         <Navigation />
         <Routes>
           <Route exact path="/">
-            <ImageCarousel images={images} />
+            <ImageCarousel
+              images={[
+                {
+                  _id: 1,
+                  imageUrl: "https://picsum.photos/200/300",
+                  title: "Image 1",
+                },
+                {
+                  _id: 2,
+                  imageUrl: "https://dummyimage.com/600x400/000/fff",
+                  title: "Image 2",
+                },
+              ]}
+            />
           </Route>
           <Route path="/upload">
             <UploadForm onAddImage={addImage} />

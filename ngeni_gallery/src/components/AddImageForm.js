@@ -8,7 +8,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { addImage } from "../actions/images";
+import { addImage } from "../store/actions/images.js";
 
 const AddImageForm = () => {
   const [title, setTitle] = useState("");
