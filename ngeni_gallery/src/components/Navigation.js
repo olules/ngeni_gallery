@@ -14,7 +14,7 @@ const Navigation = () => {
             Gallery
           </Typography>
         </Link>
-        <Link to="/addImage" style={{ textDecoration: "none", color: "white" }}>
+        <Link to="/add-image" style={{ textDecoration: "none", color: "white" }}>
           <Typography variant="h6">Add Image</Typography>
         </Link>
       </Toolbar>

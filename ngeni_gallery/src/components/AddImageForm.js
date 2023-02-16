@@ -6,9 +6,24 @@ import {
   Typography,
   Container,
   Box,
+  makeStyles,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { addImage } from "../store/actions/images.js";
+
+const useStyles = makeStyles((theme) => ({
+  formContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  input: {
+    display: "none",
+  },
+  button: {
+    margin: theme.spacing(2, 0),
+  },
+}));
 
 const AddImageForm = () => {
   const [title, setTitle] = useState("");
@@ -17,6 +32,7 @@ const AddImageForm = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const classes = useStyles();
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
@@ -52,8 +68,8 @@ const AddImageForm = () => {
       <Box mt={3}>
         <Typography variant="h4">Add Image</Typography>
       </Box>
-      <form onSubmit={handleSubmit}>
-        <Box mt={2}>
+      <form onSubmit={handleSubmit} className={classes.formContainer}>
+        <Box mt={2} width="100%">
           <TextField
             fullWidth
             label="Title"
@@ -61,7 +77,7 @@ const AddImageForm = () => {
             onChange={handleTitleChange}
           />
         </Box>
-        <Box mt={2}>
+        <Box mt={2} width="100%">
           <TextField
             fullWidth
             label="Description"
@@ -69,17 +85,29 @@ const AddImageForm = () => {
             onChange={handleDescriptionChange}
           />
         </Box>
-        <Box mt={2}>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+        <Box mt={2} width="100%">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            id="contained-button-file"
+            className={classes.input}
+          />
+          <label htmlFor="contained-button-file">
+            <Button variant="contained" color="primary" component="span">
+              Upload
+            </Button>
+          </label>
         </Box>
-        <Box mt={2}>
+        <Box mt={2} width="100%">
           <Button
             type="submit"
             variant="contained"
             color="primary"
             disabled={!title || !description || !image}
+            className={classes.button}
           >
-            Upload
+            Submit
           </Button>
         </Box>
       </form>

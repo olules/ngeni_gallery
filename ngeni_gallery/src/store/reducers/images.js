@@ -7,7 +7,7 @@ import {
   CLEAR_CURRENT_IMAGE,
   SET_ERROR,
   CLEAR_ERROR,
-} from "./actions";
+} from "../actions/images.js";
 
 const initialState = {
   images: [],
