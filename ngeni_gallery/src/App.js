@@ -8,29 +8,26 @@ import PrivateRoute from "./components/PrivateRoute.js";
 import { useSelector } from "react-redux";
 import store from "./store/configureStore.js";
 import { Provider } from "react-redux";
-function App() {
-  const isAuthenticated = useSelector((state) => state.login.isAuthenticated);
 
+function App() {
   return (
-    <Provider store={store} >
-      <Router>
-        <Navigation />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <PrivateRoute
-            path="/"
-            element={<ImageCarousel />}
-            isAuthenticated={isAuthenticated}
-          />
-          <PrivateRoute
-            path="/add-image"
-            element={<AddImageForm />}
-            isAuthenticated={isAuthenticated}
-          />
-        </Routes>
-      </Router>
-    </Provider>
+    <Router>
+      <Navigation />
+      <Routes>
+        <Route exact path="/" element={<PrivateRoute />}>
+          <Route path="/" element={<ImageCarousel />} />
+          <Route path="/add-image" element={<AddImageForm />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App;
+export default function () {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
