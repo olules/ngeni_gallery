@@ -27,7 +27,10 @@ imagesRouter.post("/", upload.single("img"), async (req, res) => {
     const newImage = new Image({
       title,
       desc,
-      imageUrl: `uploads/${req.file.filename}`,
+      img: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
     });
 
     await newImage.save();
@@ -80,7 +83,10 @@ imagesRouter.put("/:id", upload.single("img"), async (req, res) => {
     };
 
     if (req.file) {
-      updatedFields.imageUrl = `uploads/${req.file.filename}`;
+      updatedFields.img = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
     }
 
     const image = await Image.findByIdAndUpdate(req.params.id, updatedFields, {
@@ -113,7 +119,6 @@ imagesRouter.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 // Get all images with user information (superuser only)
 imagesRouter.get("/users", async (req, res) => {
