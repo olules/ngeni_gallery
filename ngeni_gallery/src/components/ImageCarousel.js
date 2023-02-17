@@ -28,7 +28,11 @@ const ImageCarousel = () => {
     setIndex(index);
   };
 
+  const src = `data:${image.contentType};base64,${image.imageData}`;
+  console.log(src);
+
   return (
+
     <div className={classes.root}>
       <Gallery
         index={index}
