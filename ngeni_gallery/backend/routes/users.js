@@ -3,8 +3,28 @@ import { hash } from "bcrypt";
 import User from "../models/User.js";
 import passport from "passport";
 
+import { Strategy as LocalStrategy } from "passport-local";
+
+
 const userRoutes = Router();
 
+
+passport.use(
+  new LocalStrategy((username, password, done) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) {
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false, { message: "Incorrect username." });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: "Incorrect password." });
+      }
+      return done(null, user);
+    });
+  })
+);
 // Login route
 userRoutes.post("/login", (req, res, next) => {
   // Use passport middleware to authenticate user
