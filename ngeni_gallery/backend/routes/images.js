@@ -113,4 +113,21 @@ imagesRouter.delete("/:id", async (req, res) => {
   }
 });
 
-export default imagesRouter;
+
+// Get all images with user information (superuser only)
+imagesRouter.get("/users", async (req, res) => {
+  try {
+    // Check if user is superuser
+    if (!req.user.is_superuser) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const images = await Image.find().populate("user", "username email");
+
+    res.json(images);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+

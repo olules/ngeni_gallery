@@ -1,28 +1,35 @@
-import { Schema, model } from "mongoose";
-import passportmongoose from "passport-local-mongoose";
+import mongoose from "mongoose";
 
-const UserSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
+const { Schema } = mongoose;
+
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    is_superuser: {
+      type: Boolean,
+      default: false,
+    },
   },
-  // password: {
-  //   type: String,
-  //   required: true,
-  //   trim: true,
-  // },
-  role: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-UserSchema.plugin(passportmongoose, {
-  usernameField: "email",
-});
+const User = mongoose.model("User", userSchema);
 
-//Associating the schema with actual collection name
-export default model("Users", UserSchema);
+export default User;

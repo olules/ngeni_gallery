@@ -1,12 +1,11 @@
 import express, { json } from "express";
 import pkg from "mongoose";
-import { extname } from "path";
 import cors from "cors";
-
 import imagesRouter from "./routes/images.js";
 import passport from "passport";
 import session from "express-session";
 import path from 'path';
+import usersRouter from "./routes/users.js";
 
 const app = express();
 const { connect, connection } = pkg;
@@ -35,6 +34,8 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/images", imagesRouter);
+app.use("/", usersRouter);
+
 
 
 

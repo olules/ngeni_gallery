@@ -24,7 +24,10 @@ export const loginFailure = (error) => ({
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     dispatch(loginRequest());
-    const { data } = await axios.post("/api/auth/login", { email, password });
+    const { data } = await axios.post("http://localhost:5000/login", {
+      email,
+      password,
+    });
     dispatch(loginSuccess(data));
   } catch (error) {
     dispatch(loginFailure(error.response.data.message));
@@ -47,7 +50,13 @@ export const signupFailure = (error) => ({
 export const signupUser = (email, password) => async (dispatch) => {
   try {
     dispatch(signupRequest());
-    const { data } = await axios.post("/api/auth/signup", { email, password });
+    const { data } = await axios.post(
+      "http://localhost:5000/api/users/signup",
+      {
+        email,
+        password,
+      }
+    );
     dispatch(signupSuccess(data));
   } catch (error) {
     dispatch(signupFailure(error.response.data.message));

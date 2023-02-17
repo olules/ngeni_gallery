@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser, signupUser } from "../store/actions/login.js";
-import {
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-} from "@material-ui/core";
+import {Card, CardContent, TextField, Button, Typography   }from "@material-ui/core";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -29,81 +24,77 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
+    <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <Card
-        style={{ width: "50%", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)" }}
+        style={{ width: "50%", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
       >
         <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Login
+          <Typography
+            variant="h5"
+            style={{ textAlign: "center", marginBottom: 20 }}
+          >
+            {showSignup ? "Sign up" : "Login"}
           </Typography>
-          <form onSubmit={handleLogin}>
-            <TextField
-              label="Email"
-              variant="outlined"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              margin="normal"
-              fullWidth
-              required
-            />
-            <TextField
-              label="Password"
-              variant="outlined"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              margin="normal"
-              fullWidth
-              required
-            />
-            <Button variant="contained" color="primary" type="submit" fullWidth>
-              Login
-            </Button>
-          </form>
           {showSignup ? (
             <form onSubmit={handleSignup}>
               <TextField
                 label="Email"
                 variant="outlined"
-                type="email"
+                color="primary"
+                fullWidth
+                style={{ marginBottom: 20 }}
                 value={signupEmail}
                 onChange={(e) => setSignupEmail(e.target.value)}
-                margin="normal"
-                fullWidth
-                required
               />
               <TextField
                 label="Password"
                 variant="outlined"
-                type="password"
+                color="primary"
+                fullWidth
+                style={{ marginBottom: 20 }}
                 value={signupPassword}
                 onChange={(e) => setSignupPassword(e.target.value)}
-                margin="normal"
-                fullWidth
-                required
               />
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                fullWidth
-              >
+              <Button type="submit" variant="contained" color="primary">
                 Signup
+              </Button>
+              <Button
+                onClick={() => setShowSignup(false)}
+                style={{ marginLeft: "10px" }}
+              >
+                Login instead
               </Button>
             </form>
           ) : (
-            <Button fullWidth onClick={() => setShowSignup(true)}>
-              Sign up instead
-            </Button>
+            <form onSubmit={handleLogin}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                color="primary"
+                fullWidth
+                style={{ marginBottom: 20 }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                label="Password"
+                variant="outlined"
+                color="primary"
+                fullWidth
+                style={{ marginBottom: 20 }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button type="submit" variant="contained" color="primary">
+                Login
+              </Button>
+              <Button
+                onClick={() => setShowSignup(true)}
+                style={{ marginLeft: "10px" }}
+              >
+                Sign up instead
+              </Button>
+            </form>
           )}
         </CardContent>
       </Card>
