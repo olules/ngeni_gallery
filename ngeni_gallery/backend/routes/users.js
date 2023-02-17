@@ -1,49 +1,47 @@
 import { Router } from "express";
-import passport from "passport";
+import { hash } from "bcrypt";
 import User from "../models/User.js";
+import passport from "passport";
 
 const userRoutes = Router();
 
 // Login route
-userRoutes.post("/login", passport.authenticate("local"), async (req, res) => {
-  try {
-    const user = req.user;
-    const { role } = user;
-
-    // Check user role and redirect accordingly
-    if (role === "superuser") {
-      res.redirect("/images/users");
-    } else {
-      res.redirect("/");
+userRoutes.post("/login", (req, res, next) => {
+  // Use passport middleware to authenticate user
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.json({ message: "Login successful" });
+    });
+  })(req, res, next);
 });
 
 // Logout route
 userRoutes.get("/logout", (req, res) => {
   req.logout();
-  res.redirect("/");
+  res.json({ message: "Logout successful" });
 });
 
-// Signup route
+// Create user route
 userRoutes.post("/signup", async (req, res) => {
   try {
-    const { username, password, role } = req.body;
-
-    // Check if user is superuser
-    if (!req.user?.is_superuser) {
-      return res.status(403).json({ message: "Not authorized" });
-    }
+    const { username, password } = req.body;
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const newUser = new User({ username, password, role });
+    const hashedPassword = await hash(password, 10);
+    const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully" });
@@ -57,7 +55,7 @@ userRoutes.post("/signup", async (req, res) => {
 userRoutes.get("/", async (req, res) => {
   try {
     // Check if user is superuser
-    if (!req.user?.is_superuser) {
+    if (!req.user.is_superuser) {
       return res.status(403).json({ message: "Not authorized" });
     }
 

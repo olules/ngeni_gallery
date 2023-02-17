@@ -5,22 +5,22 @@ import {Card, CardContent, TextField, Button, Typography   }from "@material-ui/c
 
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showSignup, setShowSignup] = useState(false);
-  const [signupEmail, setSignupEmail] = useState("");
+  const [signupUsername, setSignupUsername] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
   const dispatch = useDispatch();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch(loginUser(email, password));
+    dispatch(loginUser(username, password));
   };
 
   const handleSignup = (e) => {
     e.preventDefault();
-    dispatch(signupUser(signupEmail, signupPassword));
+    dispatch(signupUser(signupUsername, signupPassword));
   };
 
   return (
@@ -38,13 +38,13 @@ const Login = () => {
           {showSignup ? (
             <form onSubmit={handleSignup}>
               <TextField
-                label="Email"
+                label="Username"
                 variant="outlined"
                 color="primary"
                 fullWidth
                 style={{ marginBottom: 20 }}
-                value={signupEmail}
-                onChange={(e) => setSignupEmail(e.target.value)}
+                value={signupUsername}
+                onChange={(e) => setSignupUsername(e.target.value)}
               />
               <TextField
                 label="Password"
@@ -68,13 +68,13 @@ const Login = () => {
           ) : (
             <form onSubmit={handleLogin}>
               <TextField
-                label="Email"
+                label="Username"
                 variant="outlined"
                 color="primary"
                 fullWidth
                 style={{ marginBottom: 20 }}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
               <TextField
                 label="Password"

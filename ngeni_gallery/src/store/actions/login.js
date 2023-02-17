@@ -21,11 +21,11 @@ export const loginFailure = (error) => ({
   payload: error,
 });
 
-export const loginUser = (email, password) => async (dispatch) => {
+export const loginUser = (username, password) => async (dispatch) => {
   try {
     dispatch(loginRequest());
-    const { data } = await axios.post("http://localhost:5000/login", {
-      email,
+    const { data } = await axios.post("http://localhost:5000/api/users/login", {
+      username,
       password,
     });
     dispatch(loginSuccess(data));
@@ -47,13 +47,13 @@ export const signupFailure = (error) => ({
   payload: error,
 });
 
-export const signupUser = (email, password) => async (dispatch) => {
+export const signupUser = (username, password) => async (dispatch) => {
   try {
     dispatch(signupRequest());
     const { data } = await axios.post(
       "http://localhost:5000/api/users/signup",
       {
-        email,
+        username,
         password,
       }
     );
