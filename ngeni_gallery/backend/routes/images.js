@@ -131,3 +131,4 @@ imagesRouter.get("/users", async (req, res) => {
   }
 });
 
+export default imagesRouter;

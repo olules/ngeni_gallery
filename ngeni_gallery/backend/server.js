@@ -5,7 +5,7 @@ import imagesRouter from "./routes/images.js";
 import passport from "passport";
 import session from "express-session";
 import path from 'path';
-import usersRouter from "./routes/users.js";
+import userRoutes from "./routes/users.js";
 
 const app = express();
 const { connect, connection } = pkg;
@@ -34,7 +34,7 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/images", imagesRouter);
-app.use("/", usersRouter);
+app.use("/api/users", userRoutes);
 
 
 

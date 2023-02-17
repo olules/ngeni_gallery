@@ -10,8 +10,8 @@ import {
 const initialState = {
   loading: false,
   isAuthenticated: false,
-  user: {},
-  error: "",
+  user: null,
+  error: null,
 };
 
 const loginReducer = (state = initialState, action) => {
@@ -20,19 +20,40 @@ const loginReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
+        error: null,
       };
     case LOGIN_SUCCESS:
       return {
         loading: false,
         isAuthenticated: true,
         user: action.payload,
-        error: "",
+        error: null,
       };
     case LOGIN_FAILURE:
       return {
         loading: false,
         isAuthenticated: false,
-        user: {},
+        user: null,
+        error: action.payload,
+      };
+    case SIGNUP_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case SIGNUP_SUCCESS:
+      return {
+        loading: false,
+        isAuthenticated: true,
+        user: action.payload,
+        error: null,
+      };
+    case SIGNUP_FAILURE:
+      return {
+        loading: false,
+        isAuthenticated: false,
+        user: null,
         error: action.payload,
       };
     default:
