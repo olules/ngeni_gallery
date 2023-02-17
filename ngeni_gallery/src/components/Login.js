@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { loginUser, signupUser } from "../store/actions/login.js";
-import {Card, CardContent, TextField, Button, Typography   }from "@material-ui/core";
-
+import {
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+} from "@material-ui/core";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -10,12 +16,13 @@ const Login = () => {
   const [showSignup, setShowSignup] = useState(false);
   const [signupUsername, setSignupUsername] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = (e) => {
     e.preventDefault();
     dispatch(loginUser(username, password));
+    navigate('/')
   };
 
   const handleSignup = (e) => {
