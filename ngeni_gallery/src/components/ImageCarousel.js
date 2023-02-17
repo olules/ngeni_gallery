@@ -42,7 +42,7 @@ const ImageCarousel = () => {
             objectFit="contain"
             src={`data:${image.contentType};base64,${image.imageData}`}
             alt={image.title}
-            style={{ margin: 200 }}
+            style={{ }}
           />
         ))}
       </Gallery>

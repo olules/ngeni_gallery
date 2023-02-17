@@ -6,7 +6,6 @@ import passport from "passport";
 import session from "express-session";
 import path from 'path';
 import userRoutes from "./routes/users.js";
-import { Strategy as LocalStrategy } from "passport-local";
 
 const app = express();
 const { connect, connection } = pkg;

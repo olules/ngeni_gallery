@@ -21,8 +21,9 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch(loginUser(username, password));
-    navigate('/')
+    dispatch(loginUser(username, password)).then(() => {
+      navigate("/add-image");
+    });
   };
 
   const handleSignup = (e) => {

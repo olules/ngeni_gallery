@@ -75,13 +75,20 @@ const handleSubmit = (event) => {
 
 
   return (
-    <Container style={{ margin: 50, marginTop: 100 }}>
-      <Box style={{ margin: 20 }} mt={10}>
+    <Container
+      style={{
+        width: "30%",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        marginTop: 80,
+        padding: 20,
+      }}
+    >
+      <Box style={{ width: "100%" }} mt={10}>
         <Typography
           style={{ textAlign: "center", fontSize: 32, fontWeight: 2 }}
           variant="h4"
         >
-          Add Image
+          Add an Image
         </Typography>
       </Box>
       <form
@@ -94,8 +101,10 @@ const handleSubmit = (event) => {
             fullWidth
             label="Title"
             value={title}
+            variant="outlined"
+            color="primary"
             onChange={handleTitleChange}
-            style={{ borderColor: "#ccc" }}
+            style={{ borderColor: "#ccc", marginBottom: 20 }}
           />
         </Box>
         <Box mt={2} width="100%">
@@ -103,8 +112,10 @@ const handleSubmit = (event) => {
             fullWidth
             label="Description"
             value={desc}
+            variant="outlined"
+            color="primary"
             onChange={handleDescChange}
-            style={{ marginBottom: 40 }}
+            style={{ marginBottom: 20 }}
           />
         </Box>
         <Box mt={2} width="100%">

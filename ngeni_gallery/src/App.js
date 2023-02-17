@@ -14,16 +14,9 @@ function App() {
     <Router>
       <Navigation />
       <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            <PrivateRoute>
-              <ImageCarousel />
-            </PrivateRoute>
-          }
-        >
-           <Route path="/add-image" element={<AddImageForm />} />
+        <Route exact path="/" element={<PrivateRoute />}>
+          <Route path="/" element={<ImageCarousel />} />
+          <Route path="/add-image" element={<AddImageForm />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

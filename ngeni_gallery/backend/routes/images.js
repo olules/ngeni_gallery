@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import multer, { diskStorage } from "multer";
 import Image from "../models/images.js";
+import { extname } from "path";
 
 const imagesRouter = express.Router();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
