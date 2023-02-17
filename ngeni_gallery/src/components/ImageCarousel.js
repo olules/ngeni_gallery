@@ -32,7 +32,6 @@ const ImageCarousel = () => {
   console.log(src);
 
   return (
-
     <div className={classes.root}>
       <Gallery
         index={index}
@@ -44,7 +43,7 @@ const ImageCarousel = () => {
           <GalleryImage
             key={image._id}
             objectFit="contain"
-            src={`data:${image.contentType};base64,${image.imageData}`}
+            src={src}
             alt={image.title}
             style={{}}
           />
