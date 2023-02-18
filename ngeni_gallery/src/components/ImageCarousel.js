@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Gallery, GalleryImage } from "react-gesture-gallery";
+import { Buffer } from "buffer";
+import axios from "axios";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,21 +17,21 @@ const ImageCarousel = () => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const res = await fetch("http://localhost:5000/api/images");
-      const data = await res.json();
-      setImages(data);
-    };
-
+   const fetchImages = async () => {
+     await axios
+       .get("http://localhost:5000/api/images")
+       .then((res) => {
+         console.log(res.data); // add this line to log the images data
+         setImages(res.data);
+       })
+       .catch((error) => console.log(error.message));
+   };
     fetchImages();
   }, []);
 
   const handleIndexChange = (index) => {
     setIndex(index);
   };
-
-  const src = `data:${image.contentType};base64,${image.imageData}`;
-  console.log(src);
 
   return (
     <div className={classes.root}>
@@ -39,15 +41,18 @@ const ImageCarousel = () => {
         enableKeyboardControls={true}
         enableMouseControls={true}
       >
-        {images.map((image) => (
-          <GalleryImage
-            key={image._id}
-            objectFit="contain"
-            src={src}
-            alt={image.title}
-            style={{}}
-          />
-        ))}
+        {images &&
+          images.map((image) => {
+            return (
+              <GalleryImage
+                key={image.title}
+                objectFit="contain"
+                src={image.img} // decode base64-encoded string of image data
+                alt={image.title}
+                style={{}}
+              />
+            );
+          })}
       </Gallery>
     </div>
   );

@@ -1,11 +1,37 @@
 import express from "express";
-import path from "path";
 import multer, { diskStorage } from "multer";
 import Image from "../models/images.js";
-import { extname } from "path";
+import path, { extname } from "path";
 
 const imagesRouter = express.Router();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+// Get image data
+imagesRouter.get("/:id/data", async (req, res) => {
+  try {
+    const image = await Image.findById(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
+    console.log(image);
+    // Check if img is defined before converting to base64
+    if (!image.img || !image.img.data) {
+      return res.status(500).json({ message: "Image data not found" });
+    }
+
+    // Convert image data buffer to base64
+    const imageData = `data:${
+      image.img.contentType
+    };base64,${image.img.data.toString("base64")}`;
+
+    res.json({ imageData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // Multer storage configuration
 const storage = diskStorage({
@@ -34,7 +60,7 @@ imagesRouter.post("/", upload.single("img"), async (req, res) => {
     });
 
     await newImage.save();
-
+    console.log(newImage);
     res.status(201).json({ message: "Image uploaded successfully" });
   } catch (error) {
     console.error(error);
@@ -56,21 +82,21 @@ imagesRouter.get("/", async (req, res) => {
   }
 });
 
-// Get single image
-imagesRouter.get("/:id", async (req, res) => {
-  try {
-    const image = await Image.findById(req.params.id);
+// // Get single image
+// imagesRouter.get("/:id", async (req, res) => {
+//   try {
+//     const image = await Image.findById(req.params.id);
 
-    if (!image) {
-      return res.status(404).json({ message: "Image not found" });
-    }
+//     if (!image) {
+//       return res.status(404).json({ message: "Image not found" });
+//     }
 
-    res.json(image);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+//     res.json({ ...image.toObject(), img: image.imageData }); // return base64-encoded string of image data
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 // Update image
 imagesRouter.put("/:id", upload.single("img"), async (req, res) => {

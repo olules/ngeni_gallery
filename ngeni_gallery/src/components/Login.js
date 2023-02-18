@@ -34,7 +34,7 @@ const Login = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <Card
-        style={{ width: "50%", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
+        style={{ width: "30%", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
       >
         <CardContent>
           <Typography
@@ -68,7 +68,7 @@ const Login = () => {
               </Button>
               <Button
                 onClick={() => setShowSignup(false)}
-                style={{ marginLeft: "10px" }}
+                style={{ marginLeft: "160px" }}
               >
                 Login instead
               </Button>
@@ -98,7 +98,7 @@ const Login = () => {
               </Button>
               <Button
                 onClick={() => setShowSignup(true)}
-                style={{ marginLeft: "10px" }}
+                style={{ marginLeft: "150px" }}
               >
                 Sign up instead
               </Button>

@@ -6,6 +6,7 @@ import passport from "passport";
 import session from "express-session";
 import path from 'path';
 import userRoutes from "./routes/users.js";
+import cors_proxy from 'cors-anywhere'
 
 const app = express();
 const { connect, connection } = pkg;
@@ -40,11 +41,17 @@ app.use("/api/users", userRoutes);
 
 
 // Serve static files
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-app.use("/uploads", express.static(__dirname + "/uploads"));
-
+const UPLOADS_DIR = path.resolve(process.cwd(), "uploads");
+imagesRouter.use("/uploads", express.static(UPLOADS_DIR));
 // Start the server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+cors_proxy
+  .createServer({
+    originWhitelist: [], // Allow all origins
+    requireHeader: ["origin", "x-requested-with"],
+    removeHeaders: ["cookie", "cookie2"],
+  })
